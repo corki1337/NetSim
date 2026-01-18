@@ -14,8 +14,14 @@ include_directories(src)
 include_directories(test)
 
 set(SOURCE_FILES
-        src/ # WZGLĘDNA ścieżka do pliku `<plik_źródłowy_1>`
-        ...                    # ewentualne kolejne WZGLĘDNE ścieżki
+        src/factory.cpp 
+        src/helpers.cpp
+        src/nodes.cpp
+        src/package.cpp
+        src/reports.cpp
+        src/simulation.cpp
+        src/storage_types.cpp
+        src/types.cpp
         )
 
 
