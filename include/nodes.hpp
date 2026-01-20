@@ -7,9 +7,14 @@
 
 #include "types.hpp"
 #include "storage_types.hpp"
+#include <memory>
 
-
-
+class IPackageReceiver{
+public:
+    virtual void receive_package(Package&& p) = 0;
+    virtual ElementID get_id() const = 0;
+    virtual ~IPackageReceiver() = default;
+};
 
 
 
