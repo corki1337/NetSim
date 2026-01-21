@@ -12,6 +12,14 @@
 #include <map>
 #include <optional>
 
+
+enum class ReceiverType{
+    WORKER,
+    STOREHOUSE
+};
+
+
+
 class IPackageReceiver{
 public:
     virtual void receive_package(Package&& p) = 0;
