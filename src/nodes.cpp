@@ -82,3 +82,19 @@ void Ramp :: deliver_goods(Time t){
         push_package(Package());
     }
 }
+
+
+void Worker::do_work(Time t){
+
+    if(!buffer_ && !(q_->empty())){
+        buffer_.emplace(q_->pop());
+        t_ = t;
+    }
+
+    if(buffer_){
+        if(t >= t_ + pd_ - 1){
+            push_package(std::move(*buffer_));
+            buffer_.reset();
+        }
+    }
+}
