@@ -27,9 +27,9 @@ public:
     iterator end() {return konteneruch_.end();}
 
     void add(Node&& node) {konteneruch_.push_back(std::move(node));}
-    void remove_by_id(ElementID id);
-    iterator find_by_id(ElementID id);
-    const_iterator find_by_id(ElementID id) const;
+    void remove_by_id(ElementID id) {konteneruch_.remove_if([id](const Node& wenzel){return id == wenzel.get_id();});}
+    iterator find_by_id(ElementID id) {return std::find_if(begin(), end(), [id](const Node& wenzel) {return id == wenzel.get_id();});}
+    const_iterator find_by_id(ElementID id) const {return std::find_if(cbegin(), cend(), [id](const Node& wenzel) {return id == wenzel.get_id();});}
 
 
 
