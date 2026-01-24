@@ -12,11 +12,20 @@
 #include <map>
 #include <optional>
 
+
+enum class ReceiverType{
+    WORKER,
+    STOREHOUSE
+};
+
+
+
 class IPackageReceiver{
 public:
     virtual void receive_package(Package&& p) = 0;
     virtual ElementID get_id() const = 0;
     virtual ~IPackageReceiver() = default;
+    virtual ReceiverType get_receiver_type() const = 0;
 
     virtual IPackageStockpile::const_iterator cbegin() const = 0;
     virtual IPackageStockpile::const_iterator cend() const = 0;
@@ -59,9 +68,7 @@ class PackageSender{
         const std::optional<Package>& get_sending_buffer() const { return buffer_; }
 
     protected:
-        void push_package(Package &&pack){
-            buffer_.emplace(std::move(pack));
-        }     
+        void push_package(Package &&pack) {buffer_.emplace(std::move(pack));}     
         
     private:
         std::optional<Package> buffer_;
@@ -74,6 +81,7 @@ class Storehouse : public IPackageReceiver{
 
         void receive_package(Package&& p) override { d_->push(std::move(p)); }
         ElementID get_id() const override{ return id_; }
+        ReceiverType get_receiver_type() const override {return ReceiverType::STOREHOUSE;}
 
         IPackageStockpile::const_iterator cbegin() const override;
         IPackageStockpile::const_iterator cend() const override;
@@ -98,5 +106,38 @@ class Ramp : public PackageSender{
         ElementID id_ ;
         TimeOffset di_;
 };
+
+class Worker : public IPackageReceiver, public PackageSender{
+public:
+    Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q)
+     : id_(id), pd_(pd), q_(std::move(q)), t_(0) {};
+    void do_work(Time t);
+    TimeOffset get_processing_duration() const {return pd_;}
+    Time get_package_processing_start_time() const {return t_;}
+    ReceiverType get_receiver_type() const override {return ReceiverType::WORKER;}
+
+    void receive_package(Package&& p) override{q_->push(std::move(p));}
+    ElementID get_id() const override{return id_;}
+    
+
+    IPackageStockpile::const_iterator cbegin() const override {return q_->cbegin();}
+    IPackageStockpile::const_iterator cend() const override {return q_->cend();}
+    IPackageStockpile::const_iterator begin() const override {return q_->begin();}
+    IPackageStockpile::const_iterator end() const override {return q_->end();}
+
+    ~Worker() = default;
+
+
+private:
+    ElementID id_;
+    TimeOffset pd_;
+    std::unique_ptr<IPackageQueue> q_;
+    Time t_;
+    std::optional<Package> buffer_;
+    
+
+};
+
+
 
 #endif
