@@ -87,3 +87,32 @@ void Factory::do_work(Time t){
         worker.do_work(t);
     }
 }
+
+
+ParsedLineData parse_line(std::string line){
+    std::vector<std::string> tokens;
+    std::string token;
+
+    std::istringstream token_stream(line);
+    char delimiter = ' ';
+
+    while (std::getline(token_stream, token, delimiter)){
+        tokens.push_back(token);
+    }
+
+    ParsedLineData liniadanych;
+    
+    std::map<std::string, ElementType> elements_type {
+        {"LOADING_RAMP", ElementType::RAMP},
+        {"WORKER", ElementType::WORKER},
+        {"LINK", ElementType::LINK},
+        {"STOREHOUSE", ElementType::STOREHOUSE}
+    };
+
+    liniadanych.element_type = elements_type.at(tokens[0]);
+
+    std::for_each(std::next(tokens.cbegin()), tokens.cend(), [&](const std::string& sstr){
+        
+    });
+
+}

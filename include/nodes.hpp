@@ -122,6 +122,7 @@ public:
 
     void receive_package(Package&& p) override{q_->push(std::move(p));}
     ElementID get_id() const override{return id_;}
+    IPackageQueue* get_queue() const {return q_.get();}
     
 
     IPackageStockpile::const_iterator cbegin() const override {return q_->cbegin();}

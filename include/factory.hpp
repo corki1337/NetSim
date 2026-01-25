@@ -9,6 +9,23 @@
 #include "nodes.hpp"
 #include <algorithm>
 #include <stdexcept>
+#include <istream>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <vector>
+
+
+enum class ElementType{
+
+    RAMP,
+    WORKER,
+    STOREHOUSE,
+    LINK
+};
+
+
+
 
 template <class Node>
 
@@ -98,7 +115,16 @@ void Factory::remove_receiver(NodeCollection<Node>& collection, ElementID id){
 }
 
 
+class ParsedLineData{
+public:
+    ElementType element_type;
+    std::map<std::string, std::string> parameters;
+};
 
+
+ParsedLineData parse_line(std::string line);
+
+Factory load_factory_structure(std::istream& is);
 
 
 
