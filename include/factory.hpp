@@ -15,6 +15,7 @@
 #include <iostream>
 #include <vector>
 
+#include <ostream>
 
 enum class ElementType{
 
@@ -133,6 +134,7 @@ Factory load_factory_structure(std::istream& is);
 
 
 
+void save_factory_structure(const Factory& factory, std::ostream& os);
 
 
 #endif
