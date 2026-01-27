@@ -130,8 +130,6 @@ public:
     IPackageStockpile::const_iterator begin() const override {return q_->begin();}
     IPackageStockpile::const_iterator end() const override {return q_->end();}
 
-    ~Worker() = default;
-
 
 private:
     ElementID id_;
