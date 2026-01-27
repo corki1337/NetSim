@@ -14,6 +14,8 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <functional>
+#include <set>
 
 #include <ostream>
 
@@ -138,5 +140,24 @@ void save_factory_structure(const Factory& factory, std::ostream& os);
 
 void generate_structure_report(const Factory& factory, std::ostream& os);
 void generate_simulation_turn_report(const Factory& factory, std::ostream& os, Time t);
+
+class IntervalReportNotifier{
+public:
+    IntervalReportNotifier(TimeOffset to) : to_(to) {}
+    bool should_generate_report(Time t);
+private:
+    TimeOffset to_;
+};
+
+class SpecificTurnsReportNotifier{
+public:
+    SpecificTurnsReportNotifier(std::set<Time> turns) : turns_(turns) {}
+    bool should_generate_report(Time t);
+private:
+    std::set<Time> turns_;
+};
+
+void simulate(Factory& f, TimeOffset d, std::function<void (Factory&, Time)> rf);
+
 
 #endif
